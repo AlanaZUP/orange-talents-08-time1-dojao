@@ -1,1 +1,16 @@
-
+spring:
+  application:
+    name: "extrato"
+  datasource:
+    driverClassName: org.postgresql.Driver
+    password: password
+    url: jdbc:postgresql://localhost:5432/extrato
+    username: keycloak
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
