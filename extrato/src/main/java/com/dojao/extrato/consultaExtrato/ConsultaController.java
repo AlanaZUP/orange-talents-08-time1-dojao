@@ -1,21 +1,35 @@
-package com.dojao.extrato.extratos.consultaExtrato;
+package com.dojao.extrato.consultaExtrato;
 
+import com.dojao.extrato.transacao.Transacao;
 import com.dojao.extrato.transacao.TransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/extratos")
+@RequestMapping("/conta")
 public class ConsultaController {
 
     @Autowired
-    private TransacaoRepository extratoRepository;
+    private TransacaoRepository transacaoRepository;
 
-    @GetMapping("/{idCliente}")
-    public ExtratosResponse consultaExtratos(@PathVariable("idCliente") String idCliente){
+    @GetMapping("/{idCliente}/extrato")
+    public ResponseEntity<?> consultaExtratos(@PathVariable("idCliente") String idCliente, @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "20") Integer size ){
+        Pageable pageable = PageRequest.of(page, size > 50 ? 50 : size, Sort.by("dataTransacao").descending());
+        Page<List<Transacao>> transacoes = transacaoRepository.findByIdClienteOrderByDataTransacaoDesc(idCliente, pageable);
 
+        if(transacoes.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Não foram encontrada transações para o cliente selecionado");
+
+        return ResponseEntity.ok(transacoes);
     }
 }
