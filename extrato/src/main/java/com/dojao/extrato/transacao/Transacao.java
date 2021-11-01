@@ -1,4 +1,4 @@
-package com.dojao.extrato.extratos;
+package com.dojao.extrato.transacao;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-public class Extrato {
+public class Transacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +31,35 @@ public class Extrato {
     @NotNull
     @Column(nullable = false)
     private LocalDateTime dataTransacao;
+
+    @Deprecated
+    public Transacao() {
+    }
+
+    public Transacao(String idCliente, Operacao operacao, BigDecimal valor, LocalDateTime dataTransacao) {
+        this.idCliente = idCliente;
+        this.operacao = operacao;
+        this.valor = valor;
+        this.dataTransacao = dataTransacao;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getIdCliente() {
+        return idCliente;
+    }
+
+    public Operacao getOperacao() {
+        return operacao;
+    }
+
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public LocalDateTime getDataTransacao() {
+        return dataTransacao;
+    }
 }
