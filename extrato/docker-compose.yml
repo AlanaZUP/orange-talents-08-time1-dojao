@@ -30,7 +30,7 @@ services:
     environment:
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: contadigital
+      POSTGRES_DB: extrato
       POSTGRES_HOST: postgres
 
 volumes:
