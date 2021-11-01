@@ -1,4 +1,4 @@
-package com.dojao.extrato.extratos;
+package com.dojao.extrato.transacao;
 
 public enum Operacao {
     PAGAMENTO_BOLETO,
