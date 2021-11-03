@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
 
-    Page<List<Transacao>> findByIdClienteOrderByDataTransacaoDesc(String idCliente, Pageable pageable);
+    Page<Transacao> findByIdClienteOrderByDataTransacaoDesc(String idCliente, Pageable pageable);
 }
