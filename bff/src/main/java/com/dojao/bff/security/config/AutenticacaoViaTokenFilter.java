@@ -2,6 +2,7 @@ package com.dojao.bff.security.config;
 
 import com.dojao.bff.exception.usuarios.Usuario;
 import com.dojao.bff.exception.usuarios.UsuarioRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,9 +28,13 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         String token = recuperarToken(httpServletRequest);
         boolean valido = tokenService.isTokenValido(token);
-        if(valido)
+        if(valido){
             autenticarCliente(token);
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
+            httpServletResponse.setStatus(HttpStatus.MOVED_PERMANENTLY.value());
+            httpServletResponse.setHeader("Authorization", "Bearer ".concat(token));
+        }else{
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+        }
     }
 
     private void autenticarCliente(String token) {
