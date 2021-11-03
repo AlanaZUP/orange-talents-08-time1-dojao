@@ -24,7 +24,7 @@ public class ConsultaController {
 
     @GetMapping("/{idCliente}/extrato")
     public ResponseEntity<?> consultaExtratos(@PathVariable("idCliente") String idCliente, @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "20") Integer size ){
-        Pageable pageable = PageRequest.of(page, size > 50 ? 50 : size, Sort.by("dataTransacao").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dataTransacao").descending());
         Page<List<Transacao>> transacoes = transacaoRepository.findByIdClienteOrderByDataTransacaoDesc(idCliente, pageable);
 
         if(transacoes.isEmpty())
