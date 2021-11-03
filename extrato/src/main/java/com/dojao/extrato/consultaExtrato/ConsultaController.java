@@ -1,5 +1,6 @@
 package com.dojao.extrato.consultaExtrato;
 
+import com.dojao.extrato.exception.NotFoundException;
 import com.dojao.extrato.transacao.Transacao;
 import com.dojao.extrato.transacao.TransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,13 @@ public class ConsultaController {
     @GetMapping("/{idCliente}/extrato")
     public ResponseEntity<?> consultaExtratos(@PathVariable("idCliente") String idCliente, @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "20") Integer size ){
         Pageable pageable = PageRequest.of(page, size, Sort.by("dataTransacao").descending());
-        Page<List<Transacao>> transacoes = transacaoRepository.findByIdClienteOrderByDataTransacaoDesc(idCliente, pageable);
+        Page<Transacao> pageTransacoes = transacaoRepository.findByIdClienteOrderByDataTransacaoDesc(idCliente, pageable);
 
-        if(transacoes.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Não foram encontrada transações para o cliente selecionado");
+        if(pageTransacoes.getTotalElements() <= 0)
+            throw new NotFoundException(idCliente);
 
-        return ResponseEntity.ok(transacoes);
+        Page<TransacaoResponse> pageTransacoesDto = pageTransacoes.map(TransacaoResponse::new);
+
+        return ResponseEntity.ok(pageTransacoesDto);
     }
 }
