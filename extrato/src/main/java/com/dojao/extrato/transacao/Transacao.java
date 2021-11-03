@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Transacao {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,7 +28,7 @@ public class Transacao {
     private BigDecimal valor;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime dataTransacao;
 
     @Deprecated
