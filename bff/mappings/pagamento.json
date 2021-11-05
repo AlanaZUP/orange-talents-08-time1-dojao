@@ -1,0 +1,88 @@
+{
+    "mappings": [
+        {
+            "request": {
+                "method": "POST",
+                "urlPattern": "/pagamento",
+                "bodyPatterns": [
+                    {
+                      "equalToJson": {
+                        "codigoDeBarras": "${json-unit.any-string}",
+                        "idConta": "${json-unit.any-number}",
+                        "valor": "${json-unit.any-number}"
+                      }
+                    }
+                  ]
+            },
+            "response": {
+                "status": 200,
+                "body": "Pagamento Realizado com sucesso"
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "urlPattern": "/transacao",
+                "bodyPatterns": [
+                    {
+                      "equalToJson": {
+                        "id": "${json-unit.any-string}",
+                        "tipoTransacaoEnum": "${json-unit.any-string}",
+                        "valor": "${json-unit.any-number}"
+                      }
+                    }
+                  ]
+            },
+            "response": {
+                "status": 200
+            }
+        },
+        {
+            "request": {
+                "method": "POST",
+                "urlPattern": "/recarga",
+                "bodyPatterns": [
+                    {
+                      "equalToJson": {
+                        "id": "${json-unit.any-string}",
+                        "numeroTelefone":"${json-unit.any-string}",
+                        "operadoraEnum": "${json-unit.any-string}",
+                        "valor": "${json-unit.any-number}"
+                      }
+                    }
+                  ]
+            },
+            "response": {
+                "status": 200,                
+                "body": "recarga realizada com sucesso"
+            }
+        },
+        {
+            "request": {
+                "method": "GET",
+                "url": "/API/CONTA/FLUXO"
+            },
+            "response": {
+                "status": 404,
+                "body": "Forbidden"
+            }
+        },{
+            "request": {
+                "method": "GET",
+                "urlPattern": "/extrato/([1-5])"
+            },
+            "response": {
+                "status": 200,
+				"jsonBody": {
+                    "id" : "123",                   
+                    "operacao" : "DEPOSITO",                   
+                    "valor" : "19.99",                   
+                    "dataTransacao" : "2021-11-05T10:00:00"
+                },
+                "headers": {
+                    "Content-Type": "application/json"
+                }
+            }
+        }      
+    ]
+}

@@ -1,7 +1,7 @@
 package com.dojao.bff.security.config;
 
-import com.dojao.bff.exception.usuarios.Usuario;
-import com.dojao.bff.exception.usuarios.UsuarioRepository;
+import com.dojao.bff.usuario.Usuario;
+import com.dojao.bff.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

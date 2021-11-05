@@ -1,6 +1,6 @@
 package com.dojao.bff.security.config;
 
-import com.dojao.bff.exception.usuarios.UsuarioRepository;
+import com.dojao.bff.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +48,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .antMatchers(HttpMethod.POST, "/contas/usuarios").permitAll()
                 .antMatchers(HttpMethod.GET, "/contas/usuarios").permitAll()
+                .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -57,5 +58,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/**.html", "/v2/api-docs", "/webjars/**",
+                "/configuration/**", "/swagger-resources/**", "/css/**", "/**.ico", "/js/**");
     }
+
 }
