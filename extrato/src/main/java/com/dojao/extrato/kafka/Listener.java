@@ -1,5 +1,6 @@
 package com.dojao.extrato.kafka;
 
+import com.dojao.extrato.transacao.Transacao;
 import com.dojao.extrato.transacao.TransacaoForm;
 import com.dojao.extrato.transacao.TransacaoRepository;
 import org.slf4j.Logger;
@@ -18,14 +19,14 @@ public class Listener {
     @org.springframework.kafka.annotation.KafkaListener(topics = "${spring.kafka.topic}")
     public void listen(TransacaoForm transacaoForm) {
         try {
-//            transacaoRepository.save();
 
-            //TODO: enriquecer log
-            LOGGER.info("Leitura realizada com sucesso");
+            Transacao transacao = transacaoForm.toModel();
+            transacaoRepository.save(transacao);
+
+            LOGGER.info("Leitura realizada com sucesso - id da mensagem:" + transacaoForm.getIdCliente() + ", id da transação: " + transacao.getId() + ", valor da transação: " + transacao.getValor());
         } catch (Exception exception) {
 
-            //TODO: enriquecer log
-            LOGGER.error("Erro na hora de armazenar leitura");
+            LOGGER.error("Erro na hora de armazenar leitura: " + transacaoForm.getIdCliente() + "Mensagem do erro: " + exception.getMessage());
         }
     }
 }

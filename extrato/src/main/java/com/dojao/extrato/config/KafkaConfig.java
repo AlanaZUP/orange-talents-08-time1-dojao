@@ -1,5 +1,6 @@
 package com.dojao.extrato.config;
 
+import com.dojao.extrato.exception.KafkaHandler;
 import com.dojao.extrato.transacao.TransacaoForm;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
@@ -47,8 +48,7 @@ public class KafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, TransacaoForm> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, TransacaoForm> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(transactionConsumerFactory());
-
-        //TODO: criar handler custom para a factory e setar aqui
+        factory.setErrorHandler(new KafkaHandler());
 
         return factory;
     }
