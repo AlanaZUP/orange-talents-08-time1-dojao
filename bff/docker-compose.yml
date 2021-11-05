@@ -20,31 +20,32 @@ services:
       context: .
     image: bff
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
       MYSQL_HOST: mysql
       MYSQL_PASSWORD: root
       MYSQL_USER: root
       MYSQL_DATABASE: bff
       MYSQL_PORT: 3306
-      URL_ORQUESTRADOR: http://wiremock-server
+      URL_ORQUESTRADOR: http://wiremock:8080
       JAEGER_ENABLED: true
       APPLICATION_NAME: BFF
       JAEGER_ENDPOINT: http://jaeger:14268/api/traces
       JAEGER_SAMPLER: 1
-      SERVER_PORT: 8080
+      SERVER_PORT: 8081
     restart: on-failure
     depends_on:
       - mysql
+      - wiremock
 
-#  wiremock-server:
-#    image: hellgate75/wiremock-server
-#    container_name: wiremock-server
-#    volumes:
-#      - ./wiremock/mappings:/wiremock/mappings
-#      - ./wiremock/wiremock-files:/wiremock/__files
-#    ports:
-#      - 9090:9090
+  wiremock:
+    image: rodolpheche/wiremock
+    container_name: wiremock
+    volumes:
+      - ./ __files:/home/wiremock/__ files
+      - ./mappings:/home/wiremock/mappings
+    ports:
+      - 8080:8080
 
 
   prometheus:

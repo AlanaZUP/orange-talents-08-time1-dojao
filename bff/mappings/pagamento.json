@@ -68,8 +68,8 @@
             }
         },{
             "request": {
-                "method": "POST",
-                "urlPattern": "/extrato"                
+                "method": "GET",
+                "urlPattern": "/extrato/([1-5])"
             },
             "response": {
                 "status": 200,
@@ -77,7 +77,7 @@
                     "id" : "123",                   
                     "operacao" : "DEPOSITO",                   
                     "valor" : "19.99",                   
-                    "dataTransacao" : "2021-11-05 10:00:00",                   
+                    "dataTransacao" : "2021-11-05T10:00:00"
                 },
                 "headers": {
                     "Content-Type": "application/json"

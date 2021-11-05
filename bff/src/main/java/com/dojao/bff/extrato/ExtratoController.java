@@ -27,7 +27,7 @@ class ExtratoController {
         try {
             final List<ExtratoResponse> list = this.orquestradorClient.extrato(idConta);
             final PageImpl<ExtratoResponse> page = new PageImpl<>(list);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(page);
         } catch (FeignException ex) {
             HttpStatus httpStatus = HttpStatus.resolve(ex.status());
             if (Objects.isNull(httpStatus)) {

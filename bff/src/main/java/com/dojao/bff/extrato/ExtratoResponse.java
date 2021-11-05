@@ -1,18 +1,13 @@
 package com.dojao.bff.extrato;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public class ExtratoResponse {
 
     private Long id;
     private String operacao;
     private BigDecimal valor;
-    //TODO
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm")
-    private LocalDateTime dataTransacao;
+    private String dataTransacao;
 
     public Long getId() {
         return id;
@@ -26,7 +21,7 @@ public class ExtratoResponse {
         return valor;
     }
 
-    public LocalDateTime getDataTransacao() {
+    public String getDataTransacao() {
         return dataTransacao;
     }
 }
