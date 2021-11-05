@@ -1,4 +1,4 @@
-package com.dojao.bff.exception.usuarios;
+package com.dojao.bff.usuario;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class UsuarioController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<?> Salvar(@RequestBody @Valid UsuarioForm usuario) {
+    public ResponseEntity<?> criaUsuario(@RequestBody @Valid UsuarioForm usuario) {
         Usuario user = usuario.toModel();
         usuarioRepository.save(user);
         URI uri = ServletUriComponentsBuilder

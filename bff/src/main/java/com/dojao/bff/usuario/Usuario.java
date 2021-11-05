@@ -1,4 +1,4 @@
-package com.dojao.bff.exception.usuarios;
+package com.dojao.bff.usuario;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +16,6 @@ import java.util.List;
 public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
     @NotBlank
@@ -25,14 +24,14 @@ public class Usuario implements UserDetails {
 
     @NotBlank
     @Email
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @NotBlank
     @Column(nullable = false)
     private String nome;
 
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false)
     private LocalDateTime dataCriacao;
 
     @ManyToMany(fetch = FetchType.EAGER)

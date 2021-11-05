@@ -1,6 +1,6 @@
 package com.dojao.bff.security.config;
 
-import com.dojao.bff.exception.usuarios.Usuario;
+import com.dojao.bff.usuario.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

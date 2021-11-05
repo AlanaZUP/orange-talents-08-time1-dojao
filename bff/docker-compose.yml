@@ -1,37 +1,85 @@
 version: '3'
 services:
-  zookeeper:
-    image: "confluentinc/cp-zookeeper:5.2.1"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_SYNC_LIMIT: 2
 
-  kafka:
-    image: "confluentinc/cp-kafka:5.2.1"
+  mysql:
+    image: mysql:5.7
     ports:
-      - 9092:9092
-    depends_on:
-      - zookeeper
+      - "3306:3306"
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-
-  postgres:
-    image: 'postgres:9.6-alpine'
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bff
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     volumes:
-      - postgres-volume:/var/lib/postgresql/data
+      - "db-data:/var/lib/mysql"
+    restart: on-failure
+
+  bff:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    image: bff
     ports:
-      - 5432:5432
+      - "8080:8080"
     environment:
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: contadigital
-      POSTGRES_HOST: postgres
+      MYSQL_HOST: mysql
+      MYSQL_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_DATABASE: bff
+      MYSQL_PORT: 3306
+      URL_ORQUESTRADOR: http://wiremock-server
+      JAEGER_ENABLED: true
+      APPLICATION_NAME: BFF
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+      JAEGER_SAMPLER: 1
+      SERVER_PORT: 8080
+    restart: on-failure
+    depends_on:
+      - mysql
+
+#  wiremock-server:
+#    image: hellgate75/wiremock-server
+#    container_name: wiremock-server
+#    volumes:
+#      - ./wiremock/mappings:/wiremock/mappings
+#      - ./wiremock/wiremock-files:/wiremock/__files
+#    ports:
+#      - 9090:9090
+
+
+  prometheus:
+    image: prom/prometheus:v2.22.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-volume:/etc/prometheus/
+    ports:
+      - "9090:9090"
+    mem_limit: 128m
+
+  grafana:
+    image: grafana/grafana:7.3.4
+    volumes:
+      - grafana-volume:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.21.0
+    ports:
+      - 5775:5775/udp
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 16686:16686
+      - 14268:14268
+      - 14250:14250
+      - 9411:9411
+    environment:
+      COLLECTOR_ZIPKIN_HTTP_PORT: 9411
 
 volumes:
-  postgres-volume:
+  grafana-volume:
+  prometheus-volume:
+  db-data:

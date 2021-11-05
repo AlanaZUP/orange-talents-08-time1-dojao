@@ -1,33 +1,34 @@
-package com.dojao.bff.pagamento;
+package com.dojao.bff.extrato;
 
 import com.dojao.bff.clients.OrquestradorClient;
 import feign.FeignException;
-import feign.RetryableException;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
 
-@Api(tags = "Pagamentos de boletos")
 @RestController
-@RequestMapping("/pagamento")
-public class PagamentoController {
+@RequestMapping("/extrato")
+class ExtratoController {
 
     @Autowired
     private OrquestradorClient orquestradorClient;
 
-    @PostMapping
-    public void pagamento(@RequestBody @Valid PagamentoRequest pagamentoRequest) {
-        try{
-            this.orquestradorClient.pagamento(pagamentoRequest);
-        }catch(FeignException ex){
+    @GetMapping("/{idConta}")
+    ResponseEntity<?> consulta(@PathVariable String idConta) {
+        try {
+            final List<ExtratoResponse> list = this.orquestradorClient.extrato(idConta);
+            final PageImpl<ExtratoResponse> page = new PageImpl<>(list);
+            return ResponseEntity.ok().build();
+        } catch (FeignException ex) {
             HttpStatus httpStatus = HttpStatus.resolve(ex.status());
             if (Objects.isNull(httpStatus)) {
                 throw ex;

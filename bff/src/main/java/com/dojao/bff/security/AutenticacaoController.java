@@ -1,7 +1,7 @@
 package com.dojao.bff.security;
 
 import com.dojao.bff.security.config.TokenService;
-import com.dojao.bff.exception.usuarios.UsuarioForm;
+import com.dojao.bff.usuario.UsuarioForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

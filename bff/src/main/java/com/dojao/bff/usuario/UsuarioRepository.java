@@ -1,4 +1,4 @@
-package com.dojao.bff.exception.usuarios;
+package com.dojao.bff.usuario;
 
 import org.springframework.data.repository.CrudRepository;
 
